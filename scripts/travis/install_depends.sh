@@ -17,6 +17,7 @@ cd "${DISTDIR}"
 RTPP_BRANCH=${RTPP_BRANCH:-"master"}
 MAKE_CMD="make"
 git clone -b "${RTPP_BRANCH}" --recursive git://github.com/sippy/rtpproxy.git
+git clone git://github.com/sippy/go-b2bua.git
 
 ##if [ "${RTPP_BRANCH}" != "master" ]
 ##then
@@ -27,14 +28,5 @@ git clone -b "${RTPP_BRANCH}" --recursive git://github.com/sippy/rtpproxy.git
 cd rtpproxy
 ./configure
 ${MAKE_CMD} all
-cd ..
-
-git clone git://github.com/sobomax/libelperiodic.git
-cd libelperiodic
-./configure
-make all
-sudo make install
-sudo ldconfig
-python setup.py clean build install
-python -c "from elperiodic.ElPeriodic import ElPeriodic"
-cd ..
+cd ../..
+GOPATH=${DISTDIR}/go-b2bua go build -o rtp_cluster

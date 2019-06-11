@@ -1,0 +1,17 @@
+# force run: 2
+dist: xenial
+language: python
+python:
+  - "2.7"
+before_install:
+  - sh -x ./scripts/travis/hack_travis_ipv6.sh
+  - sh -x ./scripts/travis/install_depends.sh
+script:
+    sh -x ./scripts/travis/test_run.sh
+env:
+  - RTPP_TEST_VER=production RTPP_BRANCH=master
+  - RTPP_TEST_VER=debug RTPP_BRANCH=master
+  - RTPP_TEST_VER=production RTPP_BRANCH=rtpp_2_1
+  - RTPP_TEST_VER=debug RTPP_BRANCH=rtpp_2_1
+  - RTPP_TEST_VER=production RTPP_BRANCH=rtpp_2_0
+  - RTPP_TEST_VER=debug RTPP_BRANCH=rtpp_2_0
