@@ -5,7 +5,6 @@ set -x
 
 TEST_MAX_DUR=60
 
-export PYTHONPATH=../sippy_lite
 PYINT=${PYINT:-"python"}
 
 write_siplog() {
@@ -78,11 +77,11 @@ sleep 2
 ${PYINT} ../scripts/rtp_cluster_client.py -s rtpc.sock ls > rtpcc.out
 
 mark_tp "Testing: creating some sessions"
-../scripts/rtpproxy_client.py udp:127.0.0.1:32324 < input/session_create > session_create.qout
+${PYINT} ../scripts/rtpproxy_client.py udp:127.0.0.1:32324 < input/session_create > session_create.qout
 mark_tp "Testing: getting stats"
-../scripts/rtpproxy_client.py udp:127.0.0.1:32324 < input/get_stats > get_stats.qout
+${PYINT} ../scripts/rtpproxy_client.py udp:127.0.0.1:32324 < input/get_stats > get_stats.qout
 mark_tp "Testing: deleting sessions"
-../scripts/rtpproxy_client.py udp:127.0.0.1:32324 < input/session_delete >> session_create.qout
+${PYINT} ../scripts/rtpproxy_client.py udp:127.0.0.1:32324 < input/session_delete >> session_create.qout
 
 sed 's|%%STATUS%%|SUSPENDED|g' basic_network.xml.in > basic_network.xml
 
