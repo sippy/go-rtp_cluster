@@ -30,7 +30,7 @@
     <rtpproxy>
       <name>RTPPROXY2</name>
       <protocol>UDP6</protocol>
-      <address>localhost:32322</address>
+      <address>[::1]:32322</address>
       <weight>100</weight>
       <capacity>2500</capacity>
       <status>ACTIVE</status>

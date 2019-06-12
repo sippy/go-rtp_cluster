@@ -26,6 +26,7 @@
 package main
 
 import (
+    "fmt"
     "net"
     "strings"
     "sync"
@@ -94,6 +95,7 @@ type rtp_cluster_member struct {
 func NewRtp_cluster_member(name string, global_config sippy_conf.Config, protocol, address string, cmd_out_address *sippy_net.HostPort) *rtp_cluster_member {
 
     logger := global_config.ErrorLogger()
+    fmt.Println("### NewRtp_cluster_member", address)
     opts, err := sippy.NewRtpProxyClientOpts(protocol + ":" + address, cmd_out_address, global_config, logger)
     if err != nil {
         println("Can't initialize rtpproxy client: " + err.Error())
