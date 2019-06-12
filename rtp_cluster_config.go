@@ -277,8 +277,8 @@ func Read_cluster_config(logger sippy_log.ErrorLogger, config string, debug bool
 	case xml.TagPathError:
             tagErr := xml.TagPathError(tkn)
             parsed_config.Error(tagErr.Error())
-	//default:
-        //    logger.Debug("unknown")
+	default:
+            logger.Debug("unknown")
 	}
     }
 
