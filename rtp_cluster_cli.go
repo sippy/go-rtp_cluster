@@ -306,7 +306,7 @@ func (self *Rtp_cluster_cli) receive_command(clim sippy_cli.CLIManagerIface, cmd
                     if _, _, err := net.SplitHostPort(address); err != nil {
                         address += ":22222"
                     }
-                    addr, _ = net.ResolveUDPAddr("udp", address)
+                    addr, _ = net.ResolveUDPAddr(rtpp_config.protocol, address)
                 } else {
                     addr, _ = net.ResolveUnixAddr("unix", address)
                 }
