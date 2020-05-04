@@ -1,4 +1,4 @@
-[![Test Status](https://travis-ci.org/sippy/go-rtp_cluster.svg?branch=master)](https://travis-ci.org/sippy/go-rtp_cluster)
+[![Test Status](https://travis-ci.com/sippy/go-rtp_cluster.svg?branch=master)](https://travis-ci.com/sippy/go-rtp_cluster)
 
 # RTP Cluster - a front-end for the distributed RTPproxy network
 
