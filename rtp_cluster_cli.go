@@ -255,6 +255,9 @@ func (self *Rtp_cluster_cli) receive_command(clim sippy_cli.CLIManagerIface, cmd
             }
             clim.Send("OK\n")
             return
+        default:
+            clim.Send(fmt.Sprintf("ERROR: unsupported action: \"%s\"\n", parts[2]))
+            return
         }
     case "h":fallthrough
     case "help":
