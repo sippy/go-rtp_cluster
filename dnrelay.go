@@ -161,6 +161,7 @@ func NewDNRelay(dnconfig *DisconnectNotify, logger sippy_log.ErrorLogger) (*DNRe
     if err != nil {
         return nil, err
     }
+    self.clim.Start()
     return self, nil
 }
 
