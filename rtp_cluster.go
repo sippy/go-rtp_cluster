@@ -26,7 +26,6 @@ package main
 
 import (
     "fmt"
-    "math"
     "math/rand"
     "net"
     "net/url"
@@ -295,7 +294,8 @@ func (self *rtp_cluster) bring_down(rtpp *rtp_cluster_member) {
         }
     }
     if self.is_in_active(rtpp) {
-        if len(rtpp.call_id_map) == 0 || rtpp.GetActiveSessions() <= 0 {
+        active_sessions := rtpp.GetActiveSessions()
+        if len(rtpp.call_id_map) == 0 || active_sessions <= 0 {
             self.remove_active(rtpp)
             rtpp.Shutdown()
             return
@@ -309,7 +309,7 @@ func (self *rtp_cluster) bring_down(rtpp *rtp_cluster_member) {
 }
 
 func (self *rtp_cluster) rtpp_active_change(rtpp *rtp_cluster_member, active_sessions int64) {
-    if rtpp.status == RTPCM_STATUS_DRAINING && (len(rtpp.call_id_map) == 0 || active_sessions == 0) {
+    if rtpp.status == RTPCM_STATUS_DRAINING && (len(rtpp.call_id_map) == 0 || active_sessions <= 0) {
         if self.is_in_pending(rtpp) {
             self.remove_pending(rtpp)
         } else {
@@ -342,7 +342,8 @@ func (self *rtp_cluster) up_command_udp(data []byte, address *sippy_net.HostPort
     if cresp != "" {
         response := cookie + " " + cresp
         server.SendTo([]byte(response), address)
-        self.logger.Debugf("Rtp_cluster.up_command_udp(): sending cached response %s to %s", response, address.String())
+        self.logger.Debugf("Rtp_cluster.up_command_udp(): sending cached response \"%s\" to %s",
+          response[:len(response) - 1], address.String())
         self.lock.Unlock()
         return
     }
@@ -436,11 +437,11 @@ func (self *rtp_cluster) up_command(clim sippy_cli.CLIManagerIface, orig_cmd str
             // Existing session we know nothing about
             if cmd.Type == 'U' {
                 // Do a forced lookup
-                //
-                // Translation from Python note:
-                //orig_cmd = "L" + cmd.ULOpts.Getstr(cmd.call_id, true)
-                // the swaptags is true here but the swaptags in the original code is actually a no-op
-                orig_cmd = "L" + cmd.ULOpts.Getstr(cmd.CallId)
+                s, err := cmd.ULOpts.Getstr(cmd.CallId, true, true)
+                if err != nil {
+                    panic(err)
+                }
+                orig_cmd = "L" + s
             }
             active := []*rtp_cluster_member{}
             for _, x := range self.active {
@@ -474,14 +475,15 @@ func (self *rtp_cluster) up_command(clim sippy_cli.CLIManagerIface, orig_cmd str
         }
         var sessions_created, active_sessions, active_streams, preceived, ptransmitted int64
         for _, rtpp = range active {
-            if rtpp.GetActiveSessions() <= 0 {
+            _active_sessions := rtpp.GetActiveSessions()
+            if _active_sessions < 0 {
                 // There might be some time between "online" and heartbeat reply,
                 // when stats are still empty, or when proxy goes from offline
                 // to online, skip it
                 continue
             }
             sessions_created += rtpp.GetSessionsCreated()
-            active_sessions += rtpp.GetActiveSessions()
+            active_sessions += _active_sessions
             active_streams += rtpp.GetActiveStreams()
             preceived += rtpp.GetPReceived()
             ptransmitted += rtpp.GetPTransmitted()
@@ -578,6 +580,7 @@ func (self *rtp_cluster) pick_proxy(call_id string) *rtp_cluster_member {
         rtpp    *rtp_cluster_member
         weight  float64
     }
+    //self.logger.Debugf("pick_proxy(%s)", call_id)
     active := []rtpp_with_weight{}
     available := []rtpp_with_weight{}
     total_weight := float64(0)
@@ -594,11 +597,11 @@ func (self *rtp_cluster) pick_proxy(call_id string) *rtp_cluster_member {
     if len(available) > 0 {
         var it rtpp_with_weight
         // Normal case, there are some proxies that are loaded below their capacities
-        thr_weight := math.Remainder(rand.Float64() * total_weight, total_weight)
-        //print total_weight, thr_weight
+        thr_weight := (1.0 - rand.Float64()) * total_weight
+        //self.logger.Debugf("total_weight %f, thr_weight %f", total_weight, thr_weight)
         for _, it = range available {
             thr_weight -= it.weight
-            if thr_weight < 0 {
+            if thr_weight <= 0 {
                 break
             }
         }
