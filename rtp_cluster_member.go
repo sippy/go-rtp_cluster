@@ -204,13 +204,12 @@ func (self *rtp_cluster_member) GoOffline() {
     self.Rtp_proxy_client_base.GoOffline()
 }
 
-func (self *rtp_cluster_member) update_active(active_sessions, sessions_created, active_streams, preceived, ptransmitted int64) {
+func (self *rtp_cluster_member) UpdateActive(active_sessions, sessions_created, active_streams, preceived, ptransmitted int64) {
     self.asess_filtered.Apply(float64(active_sessions))
     if self.GetActiveSessions() != active_sessions && self.on_active_update != nil {
         self.on_active_update(self, active_sessions)
     }
-    // TODO I am not sure about the parameters
-    self.UpdateActive(active_sessions, 0, 0, 0, 0)
+    self.Rtp_proxy_client_base.UpdateActive(active_sessions, sessions_created, active_streams, preceived, ptransmitted)
 }
 
 func (self *rtp_cluster_member) call_id_map_aging() {
