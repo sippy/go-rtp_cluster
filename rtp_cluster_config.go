@@ -217,7 +217,7 @@ func (self *ValidateHandler) Characters(elm xml.CharData) error{
         } else if self.element == "cmd_out_address" {
             self.rtpproxy.cmd_out_address = content
         } else if self.element == "weight" {
-            if weight, err := strconv.Atoi(content); err != nil {
+            if weight, err := strconv.Atoi(content); err == nil {
                 self.rtpproxy.weight = weight
             } else {
                 return fmt.Errorf("wrong rtpproxy weight value, an integer is expected: %s", content)
