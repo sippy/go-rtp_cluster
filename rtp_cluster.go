@@ -423,7 +423,7 @@ func (self *rtp_cluster) up_command(clim sippy_cli.CLIManagerIface, orig_cmd str
                     self.logger.Error("Error unescaping the notify_tag: " + err.Error())
                     return
                 }
-                dnstr := cmd.ULOpts.NotifySocket[pref_len:] + notify_tag
+                dnstr := cmd.ULOpts.NotifySocket[pref_len:] + " " + notify_tag
                 cmd.ULOpts.NotifyTag = url.QueryEscape(dnstr)
                 cmd.ULOpts.NotifySocket = "tcp:%%CC_SELF%%:" + self.dnrelay.in_address.Port.String()
                 orig_cmd = cmd.String()
