@@ -34,13 +34,12 @@ import (
     "sync/atomic"
     "time"
 
-    "sippy"
-    "sippy/cli"
-    "sippy/log"
-    "sippy/net"
-    "sippy/time"
-    "sippy/utils"
-
+    "github.com/sippy/go-b2bua/sippy"
+    "github.com/sippy/go-b2bua/sippy/cli"
+    "github.com/sippy/go-b2bua/sippy/log"
+    "github.com/sippy/go-b2bua/sippy/net"
+    "github.com/sippy/go-b2bua/sippy/time"
+    "github.com/sippy/go-b2bua/sippy/utils"
 )
 
 type NetworkTransport interface {

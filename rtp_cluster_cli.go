@@ -33,10 +33,10 @@ import (
     "strconv"
     "strings"
 
-    "sippy/cli"
-    "sippy/log"
-    "sippy/net"
-    "sippy/utils"
+    "github.com/sippy/go-b2bua/sippy/cli"
+    "github.com/sippy/go-b2bua/sippy/log"
+    "github.com/sippy/go-b2bua/sippy/net"
+    "github.com/sippy/go-b2bua/sippy/utils"
 )
 
 type Rtp_cluster_cli_iface interface {

@@ -37,9 +37,9 @@ import (
     "strings"
     "time"
 
-    "sippy/log"
-    "sippy/net"
-    "sippy/utils"
+    "github.com/sippy/go-b2bua/sippy/log"
+    "github.com/sippy/go-b2bua/sippy/net"
+    "github.com/sippy/go-b2bua/sippy/utils"
 )
 
 type fakecli struct {

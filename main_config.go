@@ -24,8 +24,8 @@
 package main
 
 import (
-    "sippy/conf"
-    "sippy/log"
+    "github.com/sippy/go-b2bua/sippy/conf"
+    "github.com/sippy/go-b2bua/sippy/log"
 )
 
 type mainConfig struct {

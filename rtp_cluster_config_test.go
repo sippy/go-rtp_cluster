@@ -28,7 +28,7 @@ import (
     "io/ioutil"
     "testing"
 
-    "sippy/log"
+    "github.com/sippy/go-b2bua/sippy/log"
 )
 
 func TestRead_cluster_config(t *testing.T) {

@@ -30,9 +30,10 @@ import (
     "strings"
     "sync"
     "syscall"
-    "sippy/cli"
-    "sippy/log"
-    "sippy/net"
+
+    "github.com/sippy/go-b2bua/sippy/cli"
+    "github.com/sippy/go-b2bua/sippy/log"
+    "github.com/sippy/go-b2bua/sippy/net"
 )
 
 const _MAX_TRIES = 10

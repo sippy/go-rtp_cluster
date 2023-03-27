@@ -29,7 +29,7 @@ import (
     "strconv"
     "strings"
 
-    "sippy/log"
+    "github.com/sippy/go-b2bua/sippy/log"
 )
 
 type DisconnectNotify struct {

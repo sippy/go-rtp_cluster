@@ -31,11 +31,11 @@ import (
     "sync"
     "time"
 
-    "sippy"
-    "sippy/conf"
-    "sippy/log"
-    "sippy/math"
-    "sippy/net"
+    "github.com/sippy/go-b2bua/sippy"
+    "github.com/sippy/go-b2bua/sippy/conf"
+    "github.com/sippy/go-b2bua/sippy/log"
+    "github.com/sippy/go-b2bua/sippy/math"
+    "github.com/sippy/go-b2bua/sippy/net"
 )
 
 type rtp_cluster_member_status int
