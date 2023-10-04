@@ -17,5 +17,13 @@ jobs:
       with:
         go-version: 1.21.1
 
+    - name: Pull and run build in Docker container
+      run: |
+        docker pull sippylabs/rtpproxy:latest
+
     - name: Build
-      run: make
+      run: |
+        echo ${RUNNER_TOOL_CACHE}
+        docker run --rm -v ${RUNNER_TOOL_CACHE}:${RUNNER_TOOL_CACHE} -v ${HOME}:${HOME} -e PATH \
+         -e WORKSPACE=${{ github.workspace }} --entrypoint /bin/sh sippylabs/rtpproxy:latest -c \
+         'set -e; cd ${WORKSPACE}; apt install -y gcc; go build -buildvcs=false -o rtp_cluster; ${WORKSPACE}/scripts/travis/test_run.sh'

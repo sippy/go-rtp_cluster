@@ -1,23 +1,15 @@
 BUILDDIR="${BUILDDIR:-${BASEDIR}}"
 
-DISTDIR="${BUILDDIR}/dist"
 TESTSDIR="${BASEDIR}/tests"
 
-RTPPDDIR="${DISTDIR}/rtpproxy"
 SIPPY_DIR="${BASEDIR}/sippy_lite"
 
 if [ "${RTPP_TEST_VER}" = "production" ]
 then
-  RTPPROXY_BIN="${RTPPDDIR}/src/rtpproxy"
+  RTPPROXY_BIN="rtpproxy"
 else
-  RTPPROXY_BIN="${RTPPDDIR}/src/rtpproxy_debug"
+  RTPPROXY_BIN="rtpproxy_debug"
 fi
-##if [ "${RTPP_BRANCH}" != "master" ]
-##then
-##  RTPPDDIR_m="${RTPPDDIR}.master"
-##else
-##  RTPPDDIR_m="${RTPPDDIR}"
-##fi
 
 init_mr_time() {
   MR_TIME="`python ${SIPPY_DIR}/sippy/tools/getmonotime.py -S ${SIPPY_DIR} -r`"
