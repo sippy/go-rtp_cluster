@@ -20,6 +20,27 @@ The following diagram illustrates the high level design of the software.
 
 ![Alt text](https://docs.google.com/drawings/d/1FNrR8uRY5TeNBhVDLRM2eNYX363QD9aYMLb8GsALHdk/pub?w=800&h=600 "RTP Custer, high-level diagram")
  
+## Build
+
+Check out the code:
+
+```
+$ git checkout https://github.com/sippy/go-rtp_cluster.git
+$ cd go-rtp_cluster
+```
+
+Make sure Go environment is installed and initialized, them run:
+
+```
+$ go build -o rtp_cluster
+```
+
+Or simply:
+
+```
+$ make
+```
+
 ## Installation and configuration
 
 Installation currently consists of unpacking rtp_cluster tar package into
