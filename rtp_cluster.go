@@ -145,11 +145,12 @@ fmt.Println(err.Error(), host, port)
             return nil, err
         }
     } else {
-        var err error
-        self.ccm, err = sippy_cli.NewCLIConnectionManagerUnix(self.up_command, address, global_config.sock_uid, global_config.sock_gid, self.logger)
+	ccm, err := sippy_cli.NewCLIConnectionManagerUnix(self.up_command, address, global_config.sock_uid, global_config.sock_gid, self.logger)
         if err != nil {
             return nil, err
         }
+	ccm.Start()
+	self.ccm = ccm
     }
     self.cache_purge_el = sippy.NewInactiveTimeout(self.rCachePurge, nil, 10 * time.Second, -1, self.logger)
     self.cache_purge_el.SpreadRuns(0.1)
