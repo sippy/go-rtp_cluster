@@ -43,11 +43,13 @@ def process_udp(addr):
 
     for l in sys.stdin.readlines():
         l = l.strip()
-        cookie = md5(r + str(t)).hexdigest()
+        d = r + str(t)
+        cookie = md5(d.encode('ascii')).hexdigest()
         t += 1
-        s.sendto(cookie + " " + l, dst)
-        res = s.recv(256)
-        print res.split(None, 1)[1].rstrip()
+        d = cookie + " " + l
+        s.sendto(d.encode('ascii'), dst)
+        res = s.recv(256).decode('ascii')
+        print(res.split(None, 1)[1].rstrip())
 
 def usage():
     print('usage: rtp_proxy_client.py DESTINATION')
