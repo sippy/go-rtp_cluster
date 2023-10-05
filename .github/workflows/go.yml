@@ -23,7 +23,10 @@ jobs:
 
     - name: Build
       run: |
-        echo ${RUNNER_TOOL_CACHE}
-        docker run --rm -v ${RUNNER_TOOL_CACHE}:${RUNNER_TOOL_CACHE} -v ${HOME}:${HOME} -e PATH \
+        make
+
+    - name: Test
+      run: |
+        docker run --rm -v ${{ github.workspace }}:${{ github.workspace }} -e PATH \
          -e WORKSPACE=${{ github.workspace }} --entrypoint /bin/sh sippylabs/rtpproxy:latest -c \
-         'set -e; cd ${WORKSPACE}; apt install -y gcc; go build -buildvcs=false -o rtp_cluster; ${WORKSPACE}/scripts/travis/test_run.sh'
+         'set -e; cd ${WORKSPACE}; apt install -y python3; ln -sf `which python3` /usr/local/bin/python; ${WORKSPACE}/scripts/travis/test_run.sh'
