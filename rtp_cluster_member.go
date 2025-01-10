@@ -36,6 +36,7 @@ import (
     "github.com/sippy/go-b2bua/sippy/log"
     "github.com/sippy/go-b2bua/sippy/math"
     "github.com/sippy/go-b2bua/sippy/net"
+    "github.com/sippy/go-b2bua/sippy/rtp_proxy"
 )
 
 type rtp_cluster_member_status int
@@ -71,7 +72,7 @@ func (self rtp_cluster_member_status) String() string {
 }
 
 type rtp_cluster_member struct {
-    sippy.Rtp_proxy_client_base
+    rtp_proxy.Rtp_proxy_client_base
     name                string
     status              rtp_cluster_member_status
     capacity            int
@@ -94,7 +95,7 @@ type rtp_cluster_member struct {
 func NewRtp_cluster_member(name string, global_config sippy_conf.Config, protocol, address string, cmd_out_address *sippy_net.HostPort) *rtp_cluster_member {
 
     logger := global_config.ErrorLogger()
-    opts, err := sippy.NewRtpProxyClientOpts(protocol + ":" + address, cmd_out_address, global_config, logger)
+    opts, err := rtp_proxy.NewRtpProxyClientOpts(protocol + ":" + address, cmd_out_address, global_config, logger)
     if err != nil {
         println("Can't initialize rtpproxy client: " + err.Error())
         return nil
@@ -111,7 +112,7 @@ func NewRtp_cluster_member(name string, global_config sippy_conf.Config, protoco
         logger          : logger,
         cmd_out_address : cmd_out_address,
     }
-    super := sippy.NewRtp_proxy_client_base(self, opts)
+    super := rtp_proxy.NewRtp_proxy_client_base(self, opts)
     self.Rtp_proxy_client_base = *super // this operation MUST be done before the call to Start()
     self.timer = sippy.NewInactiveTimeout(self.call_id_map_aging, /*sync.Locker*/nil, 600 * time.Second, -1, self.logger)
     self.timer.SpreadRuns(0.1)

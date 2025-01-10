@@ -38,6 +38,7 @@ import (
     "github.com/sippy/go-b2bua/sippy/cli"
     "github.com/sippy/go-b2bua/sippy/log"
     "github.com/sippy/go-b2bua/sippy/net"
+    "github.com/sippy/go-b2bua/sippy/rtp_proxy"
     "github.com/sippy/go-b2bua/sippy/time"
     "github.com/sippy/go-b2bua/sippy/utils"
 )
@@ -52,11 +53,11 @@ type broadcaster struct {
     nparts  int64
     results []string
     clim    sippy_cli.CLIManagerIface
-    cmd     *sippy.Rtp_proxy_cmd
-    sobj    *sippy.Rtpp_stats
+    cmd     *rtp_proxy.Rtp_proxy_cmd
+    sobj    *rtp_proxy.Rtpp_stats
 }
 
-func newBroadcaster(bcount int64, clim sippy_cli.CLIManagerIface, cmd *sippy.Rtp_proxy_cmd) *broadcaster {
+func newBroadcaster(bcount int64, clim sippy_cli.CLIManagerIface, cmd *rtp_proxy.Rtp_proxy_cmd) *broadcaster {
     return &broadcaster{
         results : make([]string, 1000),
         bcount  : bcount,
@@ -356,7 +357,7 @@ func (self *rtp_cluster) up_command_udp(data []byte, address *sippy_net.HostPort
 
 func (self *rtp_cluster) up_command(clim sippy_cli.CLIManagerIface, orig_cmd string) {
     var rtpp *rtp_cluster_member
-    cmd, err := sippy.NewRtp_proxy_cmd(orig_cmd)
+    cmd, err := rtp_proxy.NewRtp_proxy_cmd(orig_cmd)
     if err != nil {
         self.logger.Debugf("Rtp_cluster.up_command(): error parsing cmd '%s': %s", orig_cmd, err.Error())
         return
@@ -453,7 +454,7 @@ func (self *rtp_cluster) up_command(clim sippy_cli.CLIManagerIface, orig_cmd str
             for _, rtpp = range active {
                 out_cmd_s := orig_cmd
                 if (cmd.Type == 'U' || cmd.Type == 'L') && rtpp.lan_address != "" {
-                    out_cmd, err := sippy.NewRtp_proxy_cmd(orig_cmd)
+                    out_cmd, err := rtp_proxy.NewRtp_proxy_cmd(orig_cmd)
                     if err != nil {
                         self.logger.Errorf("Error parsing cmd '%s': %s: ", orig_cmd, err.Error())
                         return
@@ -499,7 +500,7 @@ func (self *rtp_cluster) up_command(clim sippy_cli.CLIManagerIface, orig_cmd str
             }
         }
         br := newBroadcaster(int64(len(active)), clim, cmd)
-        br.sobj = sippy.NewRtpp_stats(strings.Fields(cmd.Args))
+        br.sobj = rtp_proxy.NewRtpp_stats(strings.Fields(cmd.Args))
         if cmd.CommandOpts != "" && strings.ToLower(cmd.CommandOpts) == "v" {
             cmd.CommandOpts = ""
             br.sobj.Verbose = true
@@ -516,7 +517,7 @@ func (self *rtp_cluster) up_command(clim sippy_cli.CLIManagerIface, orig_cmd str
     //print 'rtpp.send_command'
     var out_cmd string
     if (cmd.Type == 'U' || cmd.Type == 'L') && rtpp.lan_address != "" {
-        cmd, err := sippy.NewRtp_proxy_cmd(orig_cmd)
+        cmd, err := rtp_proxy.NewRtp_proxy_cmd(orig_cmd)
         if err != nil {
             self.logger.Errorf("Error parsing cmd '%s': %s: ", orig_cmd, err.Error())
             return
@@ -537,7 +538,7 @@ func (self *rtp_cluster) rCachePurge() {
     self.l1rcache = make(map[string]string)
 }
 
-func (self *rtp_cluster) down_command(result string, clim sippy_cli.CLIManagerIface, cmd *sippy.Rtp_proxy_cmd, rtpp *rtp_cluster_member) {
+func (self *rtp_cluster) down_command(result string, clim sippy_cli.CLIManagerIface, cmd *rtp_proxy.Rtp_proxy_cmd, rtpp *rtp_cluster_member) {
     if udpclim, ok := clim.(*udpCLIM); ok {
         self.lock.Lock()
         if _, ok = self.commands_inflight[udpclim.cookie]; ok {
@@ -571,7 +572,7 @@ func (self *rtp_cluster) down_command(result string, clim sippy_cli.CLIManagerIf
     clim.Close()
 }
 
-func (self *rtp_cluster) ignore_response(result string, clim sippy_cli.CLIManagerIface, cmd *sippy.Rtp_proxy_cmd, rtpp *rtp_cluster_member) {
+func (self *rtp_cluster) ignore_response(result string, clim sippy_cli.CLIManagerIface, cmd *rtp_proxy.Rtp_proxy_cmd, rtpp *rtp_cluster_member) {
     self.logger.Debugf("Got delayed response from node \"%s\" to already completed request, ignoring: \"%s\"", rtpp.name, result)
 }
 
